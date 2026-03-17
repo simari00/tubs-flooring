@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tubs Flooring | Master CMS</title>
+    <style>
+        body { font-family: 'Helvetica Neue', sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
+        
+        /* Sidebar Navigation */
+        .sidebar { width: 250px; background: #1a1a1a; position: fixed; height: 100vh; padding-top: 20px; border-right: 2px solid #8b5a2b; }
+        .sidebar h2 { color: #d4a373; text-align: center; letter-spacing: 2px; margin-bottom: 30px; font-weight: 300; }
+        .tab-btn { display: block; width: 100%; padding: 15px 20px; background: none; border: none; color: #aaa; text-align: left; font-size: 1rem; cursor: pointer; border-left: 4px solid transparent; transition: 0.3s; }
+        .tab-btn:hover { background: #222; color: #fff; }
+        .tab-btn.active { background: #2a2a2a; color: #fff; border-left: 4px solid #8b5a2b; font-weight: bold; }
+        .logout-btn { display: block; width: 100%; padding: 15px 20px; background: #c62828; border: none; color: white; text-align: left; font-size: 1rem; cursor: pointer; position: absolute; bottom: 0; font-weight: bold; }
+
+        /* Main Content Area */
+        .main-content { margin-left: 250px; padding: 40px; }
+        .tab-content { display: none; background: #222; padding: 30px; border-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .tab-content.active { display: block; }
+        
+        h3 { border-bottom: 1px solid #444; padding-bottom: 10px; margin-top: 0; color: #d4a373; font-weight: 300; font-size: 1.5rem; }
+        
+        /* Form Styling */
+        label { display: block; margin: 15px 0 5px; font-weight: bold; font-size: 0.85rem; color: #ccc; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #444; border-radius: 3px; background: #333; color: white; font-family: inherit; }
+        .submit-btn { background: #8b5a2b; color: white; padding: 15px; border: none; width: 100%; cursor: pointer; font-size: 1.1rem; font-weight: bold; margin-top: 20px; border-radius: 3px; transition: 0.3s; }
+        .submit-btn:hover { background: #6b431e; }
+        
+        /* Cancel Edit Button */
+        .cancel-btn { background: #555; color: white; padding: 10px; border: none; width: 100%; cursor: pointer; font-size: 1rem; font-weight: bold; margin-top: 10px; border-radius: 3px; display: none; }
+        .cancel-btn:hover { background: #777; }
+
+        /* List Styling (CRM & Data) */
+        .data-item { background: #333; padding: 15px; margin-top: 15px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #555; }
+        .data-info strong { display: block; font-size: 1.1rem; color: #fff; }
+        .data-info span { font-size: 0.85rem; color: #aaa; }
+        .action-btns { display: flex; gap: 10px; }
+        .edit-btn { background: #1976d2; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 3px; font-weight: bold; }
+        .delete-btn { background: #c62828; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 3px; font-weight: bold; }
+        
+        /* CRM Leads specific */
+        .lead-item { border-left-color: #3b82f6; }
+        
+        /* MOBILE ADMIN RESPONSIVENESS */
+        @media (max-width: 850px) {
+            .sidebar { position: relative; width: 100%; height: auto; border-right: none; border-bottom: 2px solid #8b5a2b; padding: 15px 10px; display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; }
+            .sidebar h2 { width: 100%; margin-bottom: 10px; }
+            .tab-btn { width: auto; padding: 8px 12px; border-left: none; border-bottom: 3px solid transparent; font-size: 0.9rem; text-align: center; }
+            .tab-btn.active { border-left: none; border-bottom: 3px solid #8b5a2b; }
+            .logout-btn { position: relative; width: 100%; margin-top: 10px; text-align: center; border-radius: 3px; }
+            .main-content { margin-left: 0; padding: 15px; }
+            .data-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .action-btns { width: 100%; justify-content: space-between; display: flex; gap: 10px; }
+            .action-btns button { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>TUBS ADMIN</h2>
+        <button class="tab-btn active" onclick="switchTab('crm')">Client Inquiries</button>
+        <button class="tab-btn" onclick="switchTab('projects')">Recent Projects</button>
+        <button class="tab-btn" onclick="switchTab('products')">Product Range</button>
+        <button class="tab-btn" onclick="switchTab('finishes')">Wood Finishes</button>
+        <button class="tab-btn" onclick="switchTab('aftercare')">Aftercare Guides</button>
+        <button class="logout-btn" onclick="logout()">LOCK & LOGOUT</button>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="crm" class="tab-content active">
+            <h3>Client Inquiries (CRM)</h3>
+            <div id="leads-list"><p style="color:#888;">Scanning vault...</p></div>
+        </div>
+
+        <div id="projects" class="tab-content">
+            <h3 id="projects-header">Add Recent Project</h3>
+            <form id="projectForm">
+                <label>Project Title</label>
+                <input type="text" id="proj_title" required>
+                <label>Category</label>
+                <select id="proj_category">
+                    <option value="Natural Wood">Natural Wood</option>
+                    <option value="Premium Synthetic">Premium Synthetic</option>
+                </select>
+                <label id="proj_image_label">Upload High-Res Image</label>
+                <input type="file" id="proj_image" required accept="image/*">
+                <label>Description</label>
+                <textarea id="proj_desc" rows="3" required></textarea>
+                <button type="submit" id="proj_submit" class="submit-btn">UPLOAD PROJECT</button>
+                <button type="button" id="proj_cancel" class="cancel-btn" onclick="cancelEdit('projects')">CANCEL EDIT</button>
+            </form>
+            <h3 style="margin-top: 40px;">Manage Projects</h3>
+            <div id="projects-list"></div>
+        </div>
+
+        <div id="products" class="tab-content">
+            <h3 id="products-header">Add to Product Range</h3>
+            <form id="productForm">
+                <label>Product Name</label>
+                <input type="text" id="prod_title" required>
+                <label>Product Category</label>
+                <select id="prod_category">
+                    <option value="Engineered hardwood flooring">Engineered hardwood flooring</option>
+                    <option value="Engineered hardwood wall cladding and ceiling">Engineered hardwood wall cladding and ceiling</option>
+                    <option value="Vinyl">Vinyl</option>
+                    <option value="Decking">Decking</option>
+                    <option value="Laminate">Laminate</option>
+                </select>
+                <label id="prod_image_label">Upload Product Image</label>
+                <input type="file" id="prod_image" required accept="image/*">
+                <label>Product Description & Specs</label>
+                <textarea id="prod_desc" rows="3" required></textarea>
+                <button type="submit" id="prod_submit" class="submit-btn">ADD PRODUCT TO CATALOG</button>
+                <button type="button" id="prod_cancel" class="cancel-btn" onclick="cancelEdit('products')">CANCEL EDIT</button>
+            </form>
+            <h3 style="margin-top: 40px;">Manage Catalog</h3>
+            <div id="products-list"></div>
+        </div>
+
+        <div id="finishes" class="tab-content">
+            <h3 id="finishes-header">Add Wood Finish Texture</h3>
+            <form id="finishForm">
+                <label>Finish Name (e.g. Natural Oak)</label>
+                <input type="text" id="fin_title" required>
+                <label id="fin_image_label">Upload Texture Image (High-Res)</label>
+                <input type="file" id="fin_image" required accept="image/*">
+                <button type="submit" id="fin_submit" class="submit-btn">UPLOAD TEXTURE</button>
+                <button type="button" id="fin_cancel" class="cancel-btn" onclick="cancelEdit('finishes')">CANCEL EDIT</button>
+            </form>
+            <h3 style="margin-top: 40px;">Manage Wood Finishes</h3>
+            <div id="finishes-list"></div>
+        </div>
+
+        <div id="aftercare" class="tab-content">
+            <h3 id="aftercare-header">Add Aftercare Guide</h3>
+            <form id="aftercareForm">
+                <label>Guide Title</label>
+                <input type="text" id="ac_title" required>
+                <label id="ac_image_label">Upload Image (Optional)</label>
+                <input type="file" id="ac_image" accept="image/*">
+                <label>Detailed Instructions</label>
+                <textarea id="ac_content" rows="6" required></textarea>
+                <button type="submit" id="ac_submit" class="submit-btn">PUBLISH GUIDE</button>
+                <button type="button" id="ac_cancel" class="cancel-btn" onclick="cancelEdit('aftercare')">CANCEL EDIT</button>
+            </form>
+            <h3 style="margin-top: 40px;">Manage Guides</h3>
+            <div id="aftercare-list"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- SECURITY ---
+        const token = localStorage.getItem('tubs_token');
+        if (!token) window.location.href = '/login.html';
+        function logout() { localStorage.removeItem('tubs_token'); window.location.href = '/login.html'; }
+
+        // --- GLOBAL STATE ---
+        // ADDED: finishes to editState and vaultData
+        let editState = {
+            projects: null,
+            products: null,
+            aftercare: null,
+            finishes: null 
+        };
+
+        let vaultData = {
+            projects: [],
+            products: [],
+            aftercare: [],
+            finishes: []
+        };
+
+        // --- TAB SWITCHER ---
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // --- API FETCHER ---
+        async function fetchData(endpoint, listId, isLead = false) {
+            const container = document.getElementById(listId);
+            const typeKey = endpoint.split('/')[2]; 
+
+            try {
+                const res = await fetch(endpoint, { headers: { 'Authorization': `Bearer ${token}` } });
+                if (res.status === 401 || res.status === 403) return logout();
+                const data = await res.json();
+                
+                if (!isLead) vaultData[typeKey] = data; 
+
+                container.innerHTML = '';
+                if (data.length === 0) { container.innerHTML = '<p style="color:#888;">No data found.</p>'; return; }
+                
+                data.forEach(item => {
+                    if (isLead) {
+                        const date = new Date(item.created_at).toLocaleDateString();
+                        container.innerHTML += `
+                            <div class="data-item lead-item">
+                                <div class="data-info">
+                                    <strong>${item.client_name} (${item.estimated_sqm} sqm)</strong>
+                                    <span>Email: ${item.client_email} | Loc: ${item.project_location} | ${date}</span>
+                                    <p style="margin: 5px 0 0; font-style: italic; font-size: 0.9rem;">"${item.message}"</p>
+                                </div>
+                            </div>`;
+                    } else {
+                        // Dynamic label based on the tab
+                        let categoryLabel = item.category;
+                        if (typeKey === 'finishes') categoryLabel = "Wood Finish Texture";
+                        else if (typeKey === 'aftercare') categoryLabel = "Aftercare Guide";
+
+                        container.innerHTML += `
+                            <div class="data-item">
+                                <div class="data-info">
+                                    <strong>${item.title}</strong>
+                                    <span>${categoryLabel}</span>
+                                </div>
+                                <div class="action-btns">
+                                    <button class="edit-btn" onclick="triggerEdit('${typeKey}', ${item.id})">EDIT</button>
+                                    <button class="delete-btn" onclick="deleteItem('${endpoint}/${item.id}', '${endpoint}', '${listId}')">DELETE</button>
+                                </div>
+                            </div>`;
+                    }
+                });
+            } catch (err) { container.innerHTML = '<p style="color:red;">Error loading data.</p>'; }
+        }
+
+        // --- DELETE ---
+        async function deleteItem(deleteUrl, refreshEndpoint, listId) {
+            if(!confirm("Permanently delete this item?")) return;
+            await fetch(deleteUrl, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } });
+            fetchData(refreshEndpoint, listId);
+        }
+
+        // --- EDIT PREPARATION ---
+        window.triggerEdit = function(type, id) {
+            const item = vaultData[type].find(x => x.id === id);
+            if (!item) return;
+
+            editState[type] = id; 
+
+            if (type === 'projects') {
+                document.getElementById('proj_title').value = item.title;
+                document.getElementById('proj_category').value = item.category;
+                document.getElementById('proj_desc').value = item.description;
+                document.getElementById('proj_image').required = false; 
+                document.getElementById('proj_image_label').innerText = "Upload New Image (Leave blank to keep current)";
+                document.getElementById('proj_submit').innerText = "UPDATE PROJECT IN VAULT";
+                document.getElementById('proj_submit').style.background = "#1976d2";
+                document.getElementById('proj_cancel').style.display = "block";
+                document.getElementById('projects-header').innerText = "Edit Project";
+            } 
+            else if (type === 'products') {
+                document.getElementById('prod_title').value = item.title;
+                document.getElementById('prod_category').value = item.category;
+                document.getElementById('prod_desc').value = item.description;
+                document.getElementById('prod_image').required = false; 
+                document.getElementById('prod_image_label').innerText = "Upload New Image (Leave blank to keep current)";
+                document.getElementById('prod_submit').innerText = "UPDATE PRODUCT";
+                document.getElementById('prod_submit').style.background = "#1976d2";
+                document.getElementById('prod_cancel').style.display = "block";
+                document.getElementById('products-header').innerText = "Edit Product";
+            }
+            // ADDED: Edit logic for Finishes
+            else if (type === 'finishes') {
+                document.getElementById('fin_title').value = item.title;
+                document.getElementById('fin_image').required = false; 
+                document.getElementById('fin_image_label').innerText = "Upload New Texture (Leave blank to keep current)";
+                document.getElementById('fin_submit').innerText = "UPDATE TEXTURE";
+                document.getElementById('fin_submit').style.background = "#1976d2";
+                document.getElementById('fin_cancel').style.display = "block";
+                document.getElementById('finishes-header').innerText = "Edit Finish Texture";
+            }
+            else if (type === 'aftercare') {
+                document.getElementById('ac_title').value = item.title;
+                document.getElementById('ac_content').value = item.content;
+                document.getElementById('ac_submit').innerText = "UPDATE GUIDE";
+                document.getElementById('ac_submit').style.background = "#1976d2";
+                document.getElementById('ac_cancel').style.display = "block";
+                document.getElementById('aftercare-header').innerText = "Edit Guide";
+            }
+            window.scrollTo(0, 0); 
+        };
+
+        // --- CANCEL EDIT ---
+        window.cancelEdit = function(type) {
+            editState[type] = null; 
+            if (type === 'projects') {
+                document.getElementById('projectForm').reset();
+                document.getElementById('proj_image').required = true;
+                document.getElementById('proj_image_label').innerText = "Upload High-Res Image";
+                document.getElementById('proj_submit').innerText = "UPLOAD PROJECT";
+                document.getElementById('proj_submit').style.background = "#8b5a2b";
+                document.getElementById('proj_cancel').style.display = "none";
+                document.getElementById('projects-header').innerText = "Add Recent Project";
+            }
+            else if (type === 'products') {
+                document.getElementById('productForm').reset();
+                document.getElementById('prod_image').required = true;
+                document.getElementById('prod_image_label').innerText = "Upload Product Image";
+                document.getElementById('prod_submit').innerText = "ADD PRODUCT TO CATALOG";
+                document.getElementById('prod_submit').style.background = "#8b5a2b";
+                document.getElementById('prod_cancel').style.display = "none";
+                document.getElementById('products-header').innerText = "Add to Product Range";
+            }
+            // ADDED: Cancel logic for Finishes
+            else if (type === 'finishes') {
+                document.getElementById('finishForm').reset();
+                document.getElementById('fin_image').required = true;
+                document.getElementById('fin_image_label').innerText = "Upload Texture Image (High-Res)";
+                document.getElementById('fin_submit').innerText = "UPLOAD TEXTURE";
+                document.getElementById('fin_submit').style.background = "#8b5a2b";
+                document.getElementById('fin_cancel').style.display = "none";
+                document.getElementById('finishes-header').innerText = "Add Wood Finish Texture";
+            }
+            else if (type === 'aftercare') {
+                document.getElementById('aftercareForm').reset();
+                document.getElementById('ac_submit').innerText = "PUBLISH GUIDE";
+                document.getElementById('ac_submit').style.background = "#8b5a2b";
+                document.getElementById('ac_cancel').style.display = "none";
+                document.getElementById('aftercare-header').innerText = "Add Aftercare Guide";
+            }
+        };
+
+        // --- FORM SUBMISSION ---
+        async function handleFormSubmit(e, baseEndpoint, listId, formFields, typeKey) {
+            e.preventDefault();
+            const formData = new FormData();
+            formFields.forEach(field => {
+                const el = document.getElementById(field.id);
+                if (el.type === 'file' && el.files.length > 0) formData.append(field.name, el.files[0]);
+                else if (el.type !== 'file') formData.append(field.name, el.value);
+            });
+
+            const isEditing = editState[typeKey] !== null;
+            const targetUrl = isEditing ? `${baseEndpoint}/${editState[typeKey]}` : baseEndpoint;
+            const method = isEditing ? 'PUT' : 'POST';
+
+            const res = await fetch(targetUrl, { method: method, headers: { 'Authorization': `Bearer ${token}` }, body: formData });
+            
+            if (res.ok) { 
+                cancelEdit(typeKey); 
+                fetchData(baseEndpoint, listId); 
+                alert(isEditing ? "Item updated successfully." : "Item added to vault."); 
+            }
+            else { alert("Database action failed."); }
+        }
+
+        // Attach Event Listeners
+        document.getElementById('projectForm').addEventListener('submit', (e) => handleFormSubmit(e, '/api/projects', 'projects-list', [
+            { id: 'proj_title', name: 'title' }, { id: 'proj_category', name: 'category' }, 
+            { id: 'proj_desc', name: 'description' }, { id: 'proj_image', name: 'image' }
+        ], 'projects'));
+
+        document.getElementById('productForm').addEventListener('submit', (e) => handleFormSubmit(e, '/api/products', 'products-list', [
+            { id: 'prod_title', name: 'title' }, { id: 'prod_category', name: 'category' }, 
+            { id: 'prod_desc', name: 'description' }, { id: 'prod_image', name: 'image' }
+        ], 'products'));
+
+        // ADDED: Event Listener for Finishes form
+        document.getElementById('finishForm').addEventListener('submit', (e) => handleFormSubmit(e, '/api/finishes', 'finishes-list', [
+            { id: 'fin_title', name: 'title' }, { id: 'fin_image', name: 'image' }
+        ], 'finishes'));
+
+        document.getElementById('aftercareForm').addEventListener('submit', (e) => handleFormSubmit(e, '/api/aftercare', 'aftercare-list', [
+            { id: 'ac_title', name: 'title' }, { id: 'ac_content', name: 'content' }, { id: 'ac_image', name: 'image' }
+        ], 'aftercare'));
+
+        // Load all data on boot
+        fetchData('/api/leads', 'leads-list', true);
+        fetchData('/api/projects', 'projects-list');
+        fetchData('/api/products', 'products-list');
+        // ADDED: Fetch Finishes on boot
+        fetchData('/api/finishes', 'finishes-list');
+        fetchData('/api/aftercare', 'aftercare-list');
+    
+    </script>
+</body>
+</html>

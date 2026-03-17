@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tubs Flooring | Secure Vault Access</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #fcfcfc; display: flex; justify-content: center; align-items: center; height: 100vh; color: #333; }
+        
+        .login-container { background: #fff; padding: 50px 40px; border-radius: 4px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); width: 100%; max-width: 400px; border-top: 5px solid #8b5a2b; text-align: center; }
+        
+        .logo-block { display: inline-flex; flex-direction: column; background: #8b5a2b; padding: 15px 25px; color: white; text-align: center; border-radius: 2px; margin-bottom: 30px;}
+        .logo-title { font-size: 1.6rem; font-weight: 300; letter-spacing: 2px; border-bottom: 2px solid white; padding-bottom: 5px; margin-bottom: 5px;}
+        .logo-location { font-size: 0.75rem; font-weight: bold; letter-spacing: 4px; }
+
+        h2 { font-weight: 300; margin-bottom: 25px; color: #1a1a1a; letter-spacing: 1px; font-size: 1.4rem;}
+        
+        input { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 2px; background: #fafafa; font-size: 1rem; text-align: center;}
+        input:focus { outline: none; border-color: #8b5a2b; }
+        
+        button { background: #8b5a2b; color: white; border: none; padding: 15px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; letter-spacing: 1px; border-radius: 2px; transition: 0.3s;}
+        button:hover { background: #6b431e; }
+        
+        #error-msg { color: #c62828; margin-top: 15px; font-weight: bold; font-size: 0.9rem; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-block">
+            <span class="logo-title">TUBS</span>
+            <span class="logo-location">ADMIN</span>
+        </div>
+        
+        <h2>Master Control Room</h2>
+        
+        <form id="loginForm">
+            <input type="text" id="username" required placeholder="Admin ID">
+            <input type="password" id="password" required placeholder="Security Passcode">
+            <button type="submit">AUTHORIZE ACCESS</button>
+        </form>
+        
+        <div id="error-msg">Access Denied: Invalid credentials.</div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            errorMsg.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Save the security badge to the browser and open the vault
+                    localStorage.setItem('tubs_token', data.token);
+                    window.location.href = '/admin.html';
+                } else {
+                    errorMsg.style.display = 'block';
+                }
+            } catch (error) {
+                errorMsg.innerText = "Fatal Error: Vault unreachable.";
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Tubs | Engineered Flooring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #ffffff; color: #333333; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        
+        .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 50px; border-bottom: 1px solid #eaeaea; font-size: 0.85rem; color: #555; background: #fff; }
+        .top-bar-items { display: flex; gap: 30px; align-items: center; }
+        .quote-btn { background: #8b5a2b; color: white; padding: 8px 20px; font-weight: bold; border-radius: 2px; }
+
+        nav { background: #ffffff; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eaeaea; }
+        .logo-block { display: flex; flex-direction: column; background: #8b5a2b; padding: 15px 25px; color: white; text-align: center; border-radius: 2px;}
+        .logo-title { font-size: 1.6rem; font-weight: 300; letter-spacing: 2px; border-bottom: 2px solid white; padding-bottom: 5px; margin-bottom: 5px;}
+        .logo-location { font-size: 0.75rem; font-weight: bold; letter-spacing: 4px; }
+        .nav-links { display: flex; gap: 35px; }
+        .nav-links a { font-size: 0.85rem; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;}
+        .nav-links a:hover { color: #8b5a2b; }
+
+        /* UPGRADED ABOUT HERO */
+        .about-hero { text-align: center; padding: 80px 40px 40px; }
+        .about-hero h1 { font-size: 3.5rem; font-weight: 300; color: #1a1a1a; letter-spacing: 1px; margin-bottom: 15px;}
+        .divider { width: 60px; height: 3px; background: #8b5a2b; margin: 0 auto; }
+
+        /* UPGRADED SPLIT LAYOUT */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; max-width: 1200px; margin: 40px auto 80px; gap: 50px; align-items: center; padding: 0 40px;}
+        .about-image { width: 100%; height: 500px; background-color: #eee; background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80'); background-size: cover; background-position: center; border-radius: 4px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .about-text h2 { font-size: 2rem; color: #8b5a2b; font-weight: 300; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        .about-text p { font-size: 1.15rem; color: #555; margin-bottom: 25px; line-height: 1.8; }
+        
+        /* UPGRADED CORE VALUES */
+        .core-values-section { background: #1a1a1a; color: white; padding: 80px 40px; text-align: center; }
+        .core-values-section h2 { font-size: 2.2rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; color: #d4a373;}
+        .values-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1200px; margin: 50px auto 0; }
+        .value-box { background: #222; padding: 40px 30px; border-radius: 4px; border-top: 3px solid #8b5a2b; transition: transform 0.3s; }
+        .value-box:hover { transform: translateY(-10px); }
+        .value-box i { font-size: 2.5rem; color: #d4a373; margin-bottom: 20px; }
+        .value-box h3 { font-size: 1.3rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .value-box p { color: #aaa; font-size: 0.95rem; }
+
+        /* MASTER FOOTER CSS (WhatsApp & Cookies) */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background-color: #25d366; color: white; border-radius: 50px; width: 65px; height: 65px; display: flex; justify-content: center; align-items: center; font-size: 35px; box-shadow: 2px 4px 15px rgba(0,0,0,0.2); z-index: 1000; transition: 0.3s; }
+        .whatsapp-float:hover { transform: scale(1.1); background-color: #1ebe57; }
+        .cookie-setting { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .cookie-setting h4 { margin-bottom: 5px; color: #1a1a1a; font-size: 1.1rem; }
+        .cookie-setting p { font-size: 0.85rem; color: #666; max-width: 80%; margin: 0; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #8b5a2b; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
+
+        /* MOBILE RESPONSIVENESS */
+        @media (max-width: 850px) {
+            .top-bar { padding: 15px; justify-content: center; }
+            .top-bar-items { flex-direction: column; gap: 10px; text-align: center; }
+            nav { flex-direction: column; padding: 20px; gap: 20px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .about-hero h1 { font-size: 2.2rem; }
+            .about-grid { grid-template-columns: 1fr; padding: 0 20px; gap: 30px;}
+            .about-image { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-bar-items">
+            <span>🇿🇦 SA: +27 68 445 6912</span>
+            <span>✉️ simaritubs07@gmail.com</span>
+            <a href="/contact" class="quote-btn">REQUEST QUOTE</a>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-block">
+            <a href="/" class="logo-title">TUBS</a>
+            <span class="logo-location">FLOORING</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Product Range</a>
+            <a href="/portfolio">Project Portfolio</a>
+            <a href="/aftercare">Aftercare</a>
+            <a href="/about" style="color: #8b5a2b; border-bottom: 2px solid #8b5a2b; padding-bottom: 5px;">About Us</a>
+            <a href="/contact">Contact Us</a>
+        </div>
+    </nav>
+
+    <div class="about-hero">
+        <h1>Craftsmanship Across Borders.</h1>
+        <div class="divider"></div>
+    </div>
+
+    <div class="about-grid">
+        <div class="about-image"></div>
+        <div class="about-text">
+            <h2>The Tubs Standard</h2>
+            <p>Founded on a commitment to uncompromising quality, Tubs Flooring specializes in the precise sourcing and installation of natural hardwood and premium synthetic surfaces.</p>
+            <p>With our logistical hub anchored securely in the Western Cape of South Africa, we execute high-end architectural flooring projects for commercial developers and luxury residential clients globally.</p>
+            <p>We do not just lay floors; we engineer architectural foundations, ensuring every single plank meets our exacting international standards for durability, aesthetic, and environmental compliance.</p>
+        </div>
+    </div>
+
+    <div class="core-values-section">
+        <h2>Our Core Values</h2>
+        <div class="divider" style="background: #fff;"></div>
+        <div class="values-grid">
+            <div class="value-box">
+                <i class="fas fa-ruler-combined"></i>
+                <h3>Absolute Precision</h3>
+                <p>From the initial subfloor assessment to the final polish, our master craftsmen execute every installation with mathematical accuracy.</p>
+            </div>
+            <div class="value-box">
+                <i class="fas fa-globe-africa"></i>
+                <h3>Global Execution</h3>
+                <p>Border logistics shouldn't compromise quality. Our streamlined operations ensure premium materials arrive and install perfectly, anywhere.</p>
+            </div>
+            <div class="value-box">
+                <i class="fas fa-leaf"></i>
+                <h3>Sustainable Luxury</h3>
+                <p>We partner exclusively with FSC-certified mills and A+ emission-rated synthetics to protect the environment while elevating your space.</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/27684456912?text=Hello%20Tubs%20Flooring,%20I%20am%20interested%20in%20a%20flooring%20consultation." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer style="background: #1a1a1a; color: #fff; padding: 80px 50px 40px; border-top: 4px solid #8b5a2b;">
+        <div style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 50px;">
+            <div>
+                <h3 style="color: #d4a373; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Tubs Flooring</h3>
+                <p style="color: #aaa; font-size: 0.9rem; line-height: 1.8;">
+                    Premium Engineered Wood and Synthetic Flooring solutions. Headquartered in South Africa, serving elite architectural projects worldwide.
+                </p>
+              <div style="margin-top: 25px; display: flex; gap: 20px;">
+    <a href="https://www.facebook.com/Tinotenda Simari" target="_blank" rel="noopener noreferrer" style="color: #aaa; font-size: 1.3rem; transition: color 0.3s;" onmouseover="this.style.color='#8b5a2b'" onmouseout="this.style.color='#aaa'">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+    
+    <a href="https://www.instagram.com/Simari/" target="_blank" rel="noopener noreferrer" style="color: #aaa; font-size: 1.3rem; transition: color 0.3s;" onmouseover="this.style.color='#8b5a2b'" onmouseout="this.style.color='#aaa'">
+        <i class="fab fa-instagram"></i>
+    </a>
+    
+    <a href="https://www.tiktok.com/@simari.00" target="_blank" rel="noopener noreferrer" style="color: #aaa; font-size: 1.3rem; transition: color 0.3s;" onmouseover="this.style.color='#8b5a2b'" onmouseout="this.style.color='#aaa'">
+        <i class="fab fa-tiktok"></i>
+    </a>
+</div>
+            </div>
+            <div>
+                <h4 style="color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 20px;">Contact Us</h4>
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 10px;">📞 +27 68 445 6912</p>
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 10px;">✉️ simaritubs07@gmail.com</p>
+                <p style="color: #aaa; font-size: 0.9rem;">📍 19 Street 21, Broadlands Village,<br>Strand, Cape Town</p>
+            </div>
+            <div>
+                <h4 style="color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 20px;">Legal & Info</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px;"><a href="/privacy.html" style="color: #aaa; font-size: 0.9rem;">Terms & Conditions</a></li>
+                    <li style="margin-bottom: 10px;"><a href="/privacy.html" style="color: #aaa; font-size: 0.9rem;">Privacy Policy</a></li>
+                    <li><a href="#" onclick="openCookiePreferences(event)" style="color: #aaa; font-size: 0.9rem;">Cookie Preferences</a></li>
+                </ul>
+            </div>
+        </div>
+        <div style="max-width: 1400px; margin: 60px auto 0; padding-top: 30px; border-top: 1px solid #333; text-align: center; color: #666; font-size: 0.8rem;">
+            <p>&copy; 2026 Tubs Flooring. All Rights Reserved. Mastery in Every Plank.</p>
+        </div>
+    </footer>
+
+    <div id="cookieBanner" style="position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; color: #333; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 10000; border-top: 3px solid #8b5a2b;">
+        <p style="font-size: 0.85rem; margin-right: 20px;">We use cookies to ensure you get the best experience on our website. By continuing to browse, you agree to our use of cookies.</p>
+        <button onclick="acceptCookies()" style="background: #8b5a2b; color: white; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; border-radius: 2px; white-space: nowrap;">ACCEPT & CLOSE</button>
+    </div>
+
+    <div id="cookiePrefModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center; z-index: 10002; background-color: rgba(0,0,0,0.85);">
+        <div class="modal-content" style="background: #fff; padding: 40px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; text-align: left; margin: auto;">
+            <h2 style="font-size: 1.8rem; font-weight: 300; margin-bottom: 10px; color: #1a1a1a;">Cookie Preferences</h2>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 30px;">Manage your settings below. Strictly necessary cookies cannot be disabled as they are required for the website and vault to function.</p>
+            <div class="cookie-setting">
+                <div><h4>Strictly Necessary</h4><p>Required for website security and core functionality.</p></div>
+                <label class="switch"><input type="checkbox" checked disabled><span class="slider"></span></label>
+            </div>
+            <div class="cookie-setting">
+                <div><h4>Performance & Analytics</h4><p>Helps us understand how visitors interact with our showroom.</p></div>
+                <label class="switch"><input type="checkbox" id="analyticsCookies" checked><span class="slider"></span></label>
+            </div>
+            <div class="cookie-setting" style="border-bottom: none;">
+                <div><h4>Marketing & Tracking</h4><p>Allows us to tailor our services to your specific interests.</p></div>
+                <label class="switch"><input type="checkbox" id="marketingCookies"><span class="slider"></span></label>
+            </div>
+            <div style="margin-top: 30px; text-align: right; display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+                <button onclick="closeCookiePreferences()" style="background: transparent; color: #555; border: 1px solid #ccc; padding: 12px 25px; cursor: pointer; border-radius: 2px; font-weight: bold;">CANCEL</button>
+                <button onclick="saveAdvancedCookies()" style="background: #8b5a2b; color: white; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 2px;">SAVE PREFERENCES</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function acceptCookies() { localStorage.setItem('tubs_cookies_accepted', 'true'); document.getElementById('cookieBanner').style.display = 'none'; }
+        function openCookiePreferences(e) {
+            e.preventDefault();
+            document.getElementById('cookiePrefModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            if(localStorage.getItem('tubs_analytics') === 'false') document.getElementById('analyticsCookies').checked = false;
+            if(localStorage.getItem('tubs_marketing') === 'false') document.getElementById('marketingCookies').checked = false;
+        }
+        function closeCookiePreferences() { document.getElementById('cookiePrefModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function saveAdvancedCookies() {
+            localStorage.setItem('tubs_cookies_accepted', 'true');
+            localStorage.setItem('tubs_analytics', document.getElementById('analyticsCookies').checked);
+            localStorage.setItem('tubs_marketing', document.getElementById('marketingCookies').checked);
+            document.getElementById('cookieBanner').style.display = 'none';
+            closeCookiePreferences();
+        }
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('tubs_cookies_accepted') === 'true') { document.getElementById('cookieBanner').style.display = 'none'; }
+        });
+    </script>
+</body>
+</html>

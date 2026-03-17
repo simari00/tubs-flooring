@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Portfolio | Tubs Flooring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Helvetica Neue', Arial, sans-serif; }
+        body { background-color: #fcfcfc; color: #333333; }
+        a { text-decoration: none; color: inherit; }
+        
+        .top-bar { display: flex; justify-content: flex-end; align-items: center; padding: 10px 50px; border-bottom: 1px solid #eaeaea; font-size: 0.85rem; color: #555; background: #fff; }
+        .top-bar-items { display: flex; gap: 30px; align-items: center; }
+
+        nav { background: #ffffff; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 100;}
+        .logo-block { display: flex; flex-direction: column; background: #8b5a2b; padding: 15px 25px; color: white; text-align: center; border-radius: 2px;}
+        .logo-title { font-size: 1.6rem; font-weight: 300; letter-spacing: 2px; border-bottom: 2px solid white; padding-bottom: 5px; margin-bottom: 5px;}
+        .logo-location { font-size: 0.75rem; font-weight: bold; letter-spacing: 4px; }
+        .nav-links { display: flex; gap: 35px; }
+        .nav-links a { font-size: 0.85rem; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s;}
+        .nav-links a:hover { color: #8b5a2b; }
+
+        .container { max-width: 1400px; margin: 60px auto 100px; padding: 0 40px; }
+        .page-header { text-align: center; margin-bottom: 50px; }
+        h1 { font-size: 2.5rem; font-weight: 300; color: #1a1a1a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .divider { width: 60px; height: 3px; background: #8b5a2b; margin: 0 auto; }
+
+        /* PROJECT FOLDERS GRID */
+        .project-folders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px; margin-bottom: 60px; }
+        
+        .project-tile {
+            position: relative; overflow: hidden; height: 320px; cursor: pointer; border-radius: 4px; 
+            background-color: #222; background-size: cover; background-position: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.4s ease, box-shadow 0.4s ease; border: 1px solid #eaeaea;
+        }
+        .project-tile:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        
+        .project-tile-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.55);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center; pointer-events: none; transition: background-color 0.3s;
+        }
+        .project-tile:hover .project-tile-overlay { background-color: rgba(0, 0, 0, 0.3); }
+        
+        .project-tile-title { color: #fff; font-size: 1.6rem; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 2px; line-height: 1.3; }
+        .project-tile-subtitle { color: #d4a373; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 5px 15px; border-radius: 20px;}
+
+        /* FOLDER CONTENTS (INNER GALLERY) */
+        .folder-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #eaeaea; }
+        .back-btn { background: transparent; color: #555; border: 1px solid #ccc; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 2px; transition: 0.3s; letter-spacing: 1px; font-size: 0.9rem;}
+        .back-btn:hover { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+        .card { background: #fff; cursor: pointer; transition: transform 0.4s ease; border: 1px solid #eee; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(0,0,0,0.05); border-bottom: 3px solid #8b5a2b; }
+        .card img { width: 100%; height: 350px; object-fit: cover; }
+        .card-content { padding: 25px; text-align: center; display: none; }
+
+        /* DYNAMIC GALLERY MODAL (UPGRADED) */
+        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; background-color: rgba(255,255,255,0.98); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        
+        .gallery-wrapper { position: relative; display: flex; align-items: center; justify-content: center; max-width: 90%; width: 100%; }
+        .modal-content { max-width: 100%; max-height: 60vh; width: auto; height: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-radius: 2px; }
+        
+        .nav-btn { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 15px 20px; color: white; font-weight: bold; font-size: 25px; transition: 0.3s ease; border-radius: 3px; user-select: none; background-color: rgba(0,0,0,0.4); border: none; z-index: 10001;}
+        .prev-btn { left: 10%; }
+        .next-btn { right: 10%; }
+        .nav-btn:hover { background-color: #8b5a2b; }
+
+        #modalCaption { width: 90%; max-width: 800px; text-align: center; color: #333; margin-top: 20px; font-size: 1.1rem; }
+        #galleryCounter { font-size: 0.85rem; font-weight: bold; color: #8b5a2b; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .close-btn { position: absolute; top: 20px; right: 40px; color: #333; font-size: 50px; font-weight: 300; cursor: pointer; transition: 0.3s; z-index: 10000; }
+        .close-btn:hover { color: #8b5a2b; }
+    
+        /* MASTER FOOTER CSS (WhatsApp & Cookies) */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background-color: #25d366; color: white; border-radius: 50px; width: 65px; height: 65px; display: flex; justify-content: center; align-items: center; font-size: 35px; box-shadow: 2px 4px 15px rgba(0,0,0,0.2); z-index: 1000; transition: 0.3s; }
+        .whatsapp-float:hover { transform: scale(1.1); background-color: #1ebe57; }
+
+        .cookie-setting { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .cookie-setting h4 { margin-bottom: 5px; color: #1a1a1a; font-size: 1.1rem; }
+        .cookie-setting p { font-size: 0.85rem; color: #666; max-width: 80%; margin: 0; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; flex-shrink: 0; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #8b5a2b; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        input:disabled + .slider { opacity: 0.5; cursor: not-allowed; }
+
+        /* MOBILE RESPONSIVENESS */
+        @media (max-width: 850px) {
+            .top-bar { padding: 15px; justify-content: center; }
+            .top-bar-items { flex-direction: column; gap: 10px; text-align: center; }
+            nav { flex-direction: column; padding: 20px; gap: 20px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .container { padding: 0 20px; margin: 40px auto; }
+            .modal-content { max-width: 95%; max-height: 50vh; margin-top: 80px; }
+            #modalCaption { width: 95%; }
+            .close-btn { top: 10px; right: 20px; color: #fff; background: rgba(0,0,0,0.5); border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; font-size: 25px;}
+            .folder-header { flex-direction: column-reverse; gap: 20px; text-align: center; }
+            
+            /* Responsive Gallery Arrows */
+            .prev-btn { left: 0; padding: 10px 15px; }
+            .next-btn { right: 0; padding: 10px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-bar-items">
+            <span>🇿🇦 SA: +27 68 445 6912</span>
+            <span>✉️ simaritubs07@gmail.com</span>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-block">
+            <a href="/" class="logo-title">TUBS</a>
+            <span class="logo-location">FLOORING</span>
+        </div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/products">Product Range</a>
+            <a href="/portfolio" style="color: #8b5a2b; border-bottom: 2px solid #8b5a2b; padding-bottom: 5px;">Project Portfolio</a>
+            <a href="/aftercare">Aftercare</a>
+            <a href="/about">About Us</a>
+            <a href="/contact">Contact Us</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>Our Installations</h1>
+            <div class="divider"></div>
+        </div>
+
+        <div id="folders-view">
+            <div id="project-folders" class="project-folders-grid">
+                <p style="text-align: center; grid-column: 1/-1; color: #888;">Scanning portfolio...</p>
+            </div>
+        </div>
+
+        <div id="contents-view" style="display: none;">
+            <div class="folder-header">
+                <button onclick="closeProjectFolder()" class="back-btn"><i class="fas fa-arrow-left"></i> &nbsp; Back to Projects</button>
+                <h3 id="current-project-title" style="color: #1a1a1a; font-size: 1.8rem; font-weight: 300; text-transform: uppercase; letter-spacing: 2px;">Project Name</h3>
+            </div>
+            
+            <div id="grid-container" class="portfolio-grid">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="projectModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        
+        <div class="gallery-wrapper">
+            <button class="nav-btn prev-btn" onclick="changeImage(-1)">&#10094;</button>
+            <img class="modal-content" id="modalImage">
+            <button class="nav-btn next-btn" onclick="changeImage(1)">&#10095;</button>
+        </div>
+
+        <div id="modalCaption">
+            <h3 id="modalTitle" style="font-size: 2rem; color: #1a1a1a;"></h3>
+            <span id="modalCategory" style="color: #8b5a2b; font-weight: bold; text-transform: uppercase;"></span>
+            <p id="galleryCounter"></p>
+            <p id="modalDesc" style="margin-top: 15px;"></p>
+        </div>
+    </div>
+
+    <script>
+        let allProjects = [];
+        let groupedProjects = {}; 
+        let currentGalleryGroup = []; // Holds the images of the currently opened folder
+        let currentImageIndex = 0; // Tracks which image is currently open in the modal
+
+        // Lightbox Modal Logic
+        function openModal(index) {
+            currentImageIndex = index;
+            updateGalleryModal();
+            document.getElementById('projectModal').style.display = "flex"; // Flex centers the wrapper perfectly
+            document.body.style.overflow = "hidden"; 
+        }
+
+        function closeModal() { 
+            document.getElementById('projectModal').style.display = "none"; 
+            document.body.style.overflow = "auto"; 
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex >= currentGalleryGroup.length) currentImageIndex = 0;
+            if (currentImageIndex < 0) currentImageIndex = currentGalleryGroup.length - 1;
+            updateGalleryModal();
+        }
+
+        function updateGalleryModal() {
+            const item = currentGalleryGroup[currentImageIndex];
+            document.getElementById('modalImage').src = item.image_url;
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalCategory').innerText = item.category;
+            document.getElementById('modalDesc').innerText = item.description;
+            document.getElementById('galleryCounter').innerText = `Image ${currentImageIndex + 1} of ${currentGalleryGroup.length}`;
+        }
+
+        // Fetch Projects and Create Folders
+        async function loadData() {
+            const container = document.getElementById('project-folders');
+            try {
+                const res = await fetch('/api/projects');
+                allProjects = await res.json();
+                
+                if (allProjects.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; grid-column: 1/-1;">No projects available yet.</p>';
+                    return;
+                }
+
+                // Group projects by exactly matching Titles
+                groupedProjects = {};
+                allProjects.forEach(item => {
+                    if(!groupedProjects[item.title]) {
+                        groupedProjects[item.title] = [];
+                    }
+                    groupedProjects[item.title].push(item);
+                });
+
+                renderFolders();
+
+            } catch (err) { 
+                container.innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">Error loading data.</p>'; 
+            }
+        }
+
+        // Render the Folder Grid
+        function renderFolders() {
+            const container = document.getElementById('project-folders');
+            container.innerHTML = '';
+            
+            for (const [title, items] of Object.entries(groupedProjects)) {
+                const coverImage = items[0].image_url; // Use the first uploaded image as the folder cover
+                const imageCount = items.length;
+                const safeTitle = title.replace(/'/g, "\\'"); // Prevent breaking the click function
+
+                container.innerHTML += `
+                    <div class="project-tile" style="background-image: url('${coverImage}');" onclick="openProjectFolder('${safeTitle}')">
+                        <div class="project-tile-overlay">
+                            <div class="project-tile-title">${title}</div>
+                            <div class="project-tile-subtitle">${imageCount} Image${imageCount > 1 ? 's' : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Open a Specific Folder
+        function openProjectFolder(title) {
+            document.getElementById('folders-view').style.display = 'none';
+            document.getElementById('contents-view').style.display = 'block';
+            document.getElementById('current-project-title').innerText = title;
+
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+
+            // Set the active gallery group
+            currentGalleryGroup = groupedProjects[title];
+
+            currentGalleryGroup.forEach((item, index) => {
+                container.innerHTML += `
+                    <div class="card" onclick="openModal(${index})">
+                        <img src="${item.image_url}" alt="${item.title}">
+                        <div class="card-content">
+                            <h3 class="card-title">${item.title}</h3>
+                            <span class="card-category">${item.category}</span>
+                        </div>
+                    </div>`;
+            });
+
+            // Smooth scroll to top of the gallery
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Close the Folder and go back to the Main Grid
+        function closeProjectFolder() {
+            document.getElementById('contents-view').style.display = 'none';
+            document.getElementById('folders-view').style.display = 'block';
+        }
+
+        // Boot Sequence
+        loadData();
+    </script>
+
+    <a href="https://wa.me/27684456912?text=Hello%20Tubs%20Flooring,%20I%20am%20interested%20in%20a%20flooring%20consultation." class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer style="background: #1a1a1a; color: #fff; padding: 80px 50px 40px; border-top: 4px solid #8b5a2b; margin-top: 80px;">
+        <div style="max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 50px;">
+            
+            <div>
+                <h3 style="color: #d4a373; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px;">Tubs Flooring</h3>
+                <p style="color: #aaa; font-size: 0.9rem; line-height: 1.8;">
+                    Premium Engineered Wood and Synthetic Flooring solutions. Headquartered in South Africa, serving elite architectural projects worldwide.
+                </p>
+               <div style="margin-top: 25px; display: flex; gap: 20px;">
+    <a href="https://www.facebook.com/Tinotenda Simari" target="_blank" rel="noopener noreferrer" style="color: #aaa; font-size: 1.3rem; transition: color 0.3s;" onmouseover="this.style.color='#8b5a2b'" onmouseout="this.style.color='#aaa'">
+        <i class="fab fa-facebook-f"></i>
+    </a>
+    
+    <a href="https://www.instagram.com/Simari/" target="_blank" rel="noopener noreferrer" style="color: #aaa; font-size: 1.3rem; transition: color 0.3s;" onmouseover="this.style.color='#8b5a2b'" onmouseout="this.style.color='#aaa'">
+        <i class="fab fa-instagram"></i>
+    </a>
+    
+    <a href="https://www.tiktok.com/@simari.00" target="_blank" rel="noopener noreferrer" style="color: #aaa; font-size: 1.3rem; transition: color 0.3s;" onmouseover="this.style.color='#8b5a2b'" onmouseout="this.style.color='#aaa'">
+        <i class="fab fa-tiktok"></i>
+    </a>
+</div>
+            </div>
+
+            <div>
+                <h4 style="color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 20px;">Contact Us</h4>
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 10px;">📞 +27 68 445 6912</p>
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 10px;">✉️ simaritubs07@gmail.com</p>
+                <p style="color: #aaa; font-size: 0.9rem;">📍 19 Street 21, Broadlands Village,<br>Strand, Cape Town</p>
+            </div>
+
+            <div>
+                <h4 style="color: #fff; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 20px;">Legal & Info</h4>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="margin-bottom: 10px;"><a href="/privacy.html" style="color: #aaa; font-size: 0.9rem;">Terms & Conditions</a></li>
+                    <li style="margin-bottom: 10px;"><a href="/privacy.html" style="color: #aaa; font-size: 0.9rem;">Privacy Policy</a></li>
+                    <li><a href="#" onclick="openCookiePreferences(event)" style="color: #aaa; font-size: 0.9rem;">Cookie Preferences</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div style="max-width: 1400px; margin: 60px auto 0; padding-top: 30px; border-top: 1px solid #333; text-align: center; color: #666; font-size: 0.8rem;">
+            <p>&copy; 2026 Tubs Flooring. All Rights Reserved. Mastery in Every Plank.</p>
+        </div>
+    </footer>
+
+    <div id="cookieBanner" style="position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; color: #333; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); z-index: 10000; border-top: 3px solid #8b5a2b;">
+        <p style="font-size: 0.85rem; margin-right: 20px;">
+            We use cookies to ensure you get the best experience on our website. By continuing to browse, you agree to our use of cookies.
+        </p>
+        <button onclick="acceptCookies()" style="background: #8b5a2b; color: white; border: none; padding: 10px 25px; font-weight: bold; cursor: pointer; border-radius: 2px; white-space: nowrap;">ACCEPT & CLOSE</button>
+    </div>
+
+    <div id="cookiePrefModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; align-items: center; justify-content: center; z-index: 10002; background-color: rgba(0,0,0,0.85);">
+        <div class="modal-content" style="background: #fff; padding: 40px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; text-align: left; margin: auto;">
+            <h2 style="font-size: 1.8rem; font-weight: 300; margin-bottom: 10px; color: #1a1a1a;">Cookie Preferences</h2>
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 30px;">Manage your settings below. Strictly necessary cookies cannot be disabled as they are required for the website and vault to function.</p>
+
+            <div class="cookie-setting">
+                <div>
+                    <h4>Strictly Necessary</h4>
+                    <p>Required for website security and core functionality.</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="cookie-setting">
+                <div>
+                    <h4>Performance & Analytics</h4>
+                    <p>Helps us understand how visitors interact with our showroom.</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="analyticsCookies" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="cookie-setting" style="border-bottom: none;">
+                <div>
+                    <h4>Marketing & Tracking</h4>
+                    <p>Allows us to tailor our services to your specific interests.</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="marketingCookies">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div style="margin-top: 30px; text-align: right; display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap;">
+                <button onclick="closeCookiePreferences()" style="background: transparent; color: #555; border: 1px solid #ccc; padding: 12px 25px; cursor: pointer; border-radius: 2px; font-weight: bold;">CANCEL</button>
+                <button onclick="saveAdvancedCookies()" style="background: #8b5a2b; color: white; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 2px;">SAVE PREFERENCES</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function acceptCookies() {
+            localStorage.setItem('tubs_cookies_accepted', 'true');
+            const banner = document.getElementById('cookieBanner');
+            if(banner) banner.style.display = 'none';
+        }
+
+        function openCookiePreferences(e) {
+            if(e) e.preventDefault();
+            document.getElementById('cookiePrefModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            if(localStorage.getItem('tubs_analytics') === 'false') document.getElementById('analyticsCookies').checked = false;
+            if(localStorage.getItem('tubs_marketing') === 'false') document.getElementById('marketingCookies').checked = false;
+        }
+
+        function closeCookiePreferences() {
+            document.getElementById('cookiePrefModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function saveAdvancedCookies() {
+            localStorage.setItem('tubs_cookies_accepted', 'true');
+            localStorage.setItem('tubs_analytics', document.getElementById('analyticsCookies').checked);
+            localStorage.setItem('tubs_marketing', document.getElementById('marketingCookies').checked);
+            
+            const banner = document.getElementById('cookieBanner');
+            if(banner) banner.style.display = 'none';
+            closeCookiePreferences();
+        }
+
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('tubs_cookies_accepted') === 'true') {
+                const banner = document.getElementById('cookieBanner');
+                if(banner) banner.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
