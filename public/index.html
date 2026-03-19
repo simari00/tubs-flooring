@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tubs Flooring | Engineered Wood Flooring</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Premium Minimalist Reset */
@@ -30,7 +31,9 @@
         .logo-title { font-size: 2.2rem; font-weight: 500; letter-spacing: 3px; margin-right: -3px; border-bottom: 2px solid white; padding-bottom: 2px; margin-bottom: 6px; line-height: 1; }
         .logo-location { font-size: 0.8rem; font-weight: 700; letter-spacing: 8px; margin-right: -8px; line-height: 1; }
         
-        .nav-links { display: flex; gap: 35px; }
+        .menu-toggle { display: none; }
+
+        .nav-links { display: flex; gap: 35px; align-items: center; }
         .nav-links a { font-size: 0.85rem; font-weight: 600; color: #333; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
         .nav-links a:hover { color: #8b5a2b; }
 
@@ -85,12 +88,12 @@
         .slide h4 { font-size: 1rem; color: #8b5a2b; text-transform: uppercase; letter-spacing: 1px; }
         @keyframes fadeEffect { from { opacity: 0; } to { opacity: 1; } }
         
-        /* 8. DYNAMIC GALLERY MODAL (UPGRADED) */
-        .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; background-color: rgba(255,255,255,0.98); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+        /* 8. DYNAMIC GALLERY MODAL (UPGRADED FOR FULL SCREEN) */
+        .modal { display: none; position: fixed; z-index: 100000; left: 0; top: 0; width: 100vw; height: 100vh; background-color: rgba(255,255,255,0.98); flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
         .gallery-wrapper { position: relative; display: flex; align-items: center; justify-content: center; max-width: 90%; width: 100%; }
         .modal-content { max-width: 100%; max-height: 60vh; width: auto; height: auto; box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-radius: 2px; }
         
-        .nav-btn { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 15px 20px; color: white; font-weight: bold; font-size: 25px; transition: 0.3s ease; border-radius: 3px; user-select: none; background-color: rgba(0,0,0,0.4); border: none; z-index: 10001;}
+        .nav-btn { cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 15px 20px; color: white; font-weight: bold; font-size: 25px; transition: 0.3s ease; border-radius: 3px; user-select: none; background-color: rgba(0,0,0,0.4); border: none; z-index: 100001;}
         .prev-btn { left: 10%; }
         .next-btn { right: 10%; }
         .nav-btn:hover { background-color: #8b5a2b; }
@@ -98,7 +101,7 @@
         #modalCaption { width: 90%; max-width: 800px; text-align: center; color: #333; margin-top: 20px; font-size: 1.1rem; }
         #galleryCounter { font-size: 0.85rem; font-weight: bold; color: #8b5a2b; margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; }
         
-        .close-btn { position: absolute; top: 20px; right: 40px; color: #333; font-size: 50px; font-weight: 300; cursor: pointer; transition: 0.3s; z-index: 10000; }
+        .close-btn { position: absolute; top: 20px; right: 40px; color: #333; font-size: 50px; font-weight: 300; cursor: pointer; transition: 0.3s; z-index: 100000; }
         .close-btn:hover { color: #8b5a2b; }
 
         /* WHATSAPP & COOKIES */
@@ -118,10 +121,23 @@
 
         /* MOBILE RESPONSIVENESS */
         @media (max-width: 850px) {
-            .top-bar { padding: 15px; justify-content: center; }
-            .top-bar-items { flex-direction: column; gap: 10px; text-align: center; }
-            nav { flex-direction: column; padding: 20px; gap: 20px; }
-            .nav-links { flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .top-bar { padding: 10px 15px; justify-content: center; }
+            .top-bar-items { flex-direction: row; flex-wrap: wrap; gap: 10px; justify-content: center; font-size: 0.75rem; }
+            
+            nav { flex-wrap: wrap; padding: 15px 20px; }
+            .logo-block { padding: 8px 16px; }
+            .logo-title { font-size: 1.6rem; margin-bottom: 2px; }
+            .logo-location { font-size: 0.6rem; letter-spacing: 5px; }
+            
+            /* Show Hamburger Button */
+            .menu-toggle { display: block; font-size: 28px; color: #8b5a2b; cursor: pointer; align-self: center; transition: 0.3s; }
+            
+            /* Hide links inside dropdown */
+            .nav-links { display: none; flex-direction: column; width: 100%; margin-top: 15px; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-radius: 4px; padding: 5px 0; }
+            .nav-links.active { display: flex; animation: fadeIn 0.3s ease; }
+            .nav-links a { width: 100%; padding: 12px 0; border-bottom: 1px solid #f5f5f5; text-align: center; margin: 0; border-top: none !important; }
+            .nav-links a:last-child { border-bottom: none; }
+
             .hero-slider { height: 60vh; }
             .hero-center-box { width: 90%; min-width: auto; padding: 30px 20px; }
             .hero-center-box h1 { font-size: 1.8rem; }
@@ -134,6 +150,7 @@
             .prev-btn { left: 0; padding: 10px 15px; }
             .next-btn { right: 0; padding: 10px 15px; }
         }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -151,7 +168,12 @@
             <span class="logo-title">TUBS</span>
             <span class="logo-location">FLOORING</span>
         </a>
-        <div class="nav-links">
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <div class="nav-links" id="nav-links">
             <a href="/" style="color: #8b5a2b; border-bottom: 2px solid #8b5a2b; padding-bottom: 5px;">Home</a>
             <a href="/products">Product Range</a>
             <a href="/portfolio">Project Portfolio</a>
@@ -350,6 +372,22 @@
     </div>
 
     <script>
+        // MOBILE HAMBURGER MENU LOGIC
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.getElementById('nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileMenu.querySelector('i');
+            if(navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
         let groupedProjects = {};
         let currentGalleryGroup = [];
         let currentImageIndex = 0;
@@ -360,7 +398,7 @@
             currentImageIndex = 0;
             updateGalleryModal();
             document.getElementById('galleryModal').style.display = "flex"; 
-            document.body.style.overflow = "hidden"; 
+            document.body.style.overflow = "hidden"; // Prevents background scrolling so modal acts full-screen
         }
 
         function closeGallery() {
@@ -444,6 +482,19 @@
             setTimeout(showHeroSlides, 5000); 
         }
         showHeroSlides();
+
+        // TESTIMONIAL SLIDER LOGIC
+        let testimonialIndex = 0;
+        function showTestimonials() {
+            let slides = document.querySelectorAll(".testimonial-container .slide");
+            if(slides.length === 0) return;
+            slides.forEach(slide => slide.classList.remove("active"));
+            testimonialIndex++;
+            if (testimonialIndex > slides.length) { testimonialIndex = 1 }
+            slides[testimonialIndex-1].classList.add("active");
+            setTimeout(showTestimonials, 6000); // Changes testimonial every 6 seconds
+        }
+        showTestimonials();
 
         // Cookie Logic
         function acceptCookies() { localStorage.setItem('tubs_cookies_accepted', 'true'); document.getElementById('cookieBanner').style.display = 'none'; }

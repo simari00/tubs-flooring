@@ -51,6 +51,11 @@ pool.connect()
     .then(() => console.log('[DATABASE] Cloud Vault connected successfully. 🟢'))
     .catch(err => console.error('[DATABASE] Connection FAILED. 🔴', err.stack));
 
+// THE SHOCK ABSORBER: Catches dropped connections from Neon so the server doesn't crash
+pool.on('error', (err) => {
+    console.error('Neon Database connection dropped. Shock absorber caught it:', err.message);
+});
+
 // ==========================================
 // 3. THE BOUNCER (SECURITY MIDDLEWARE)
 // ==========================================
